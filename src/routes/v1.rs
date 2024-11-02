@@ -1,10 +1,7 @@
 use axum::routing::get;
 use axum::Router;
-
-async fn handler() -> &'static str {
-    "Hello, world!"
-}
+use crate::handlers;
 
 pub fn configure() -> Router {
-    Router::new().route("/hello", get(handler))
+    Router::new().route("/hello", get(handlers::hello::hello))
 }
