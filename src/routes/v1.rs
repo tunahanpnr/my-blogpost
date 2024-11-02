@@ -1,7 +1,6 @@
-use axum::routing::get;
 use axum::Router;
-use crate::handlers;
+use crate::routes::blog;
 
 pub fn configure() -> Router {
-    Router::new().route("/hello", get(handlers::hello::hello))
+    Router::new().nest("/v1", blog::configure())
 }
