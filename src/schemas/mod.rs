@@ -1,1 +1,1 @@
-mod blog;
+pub mod blog;

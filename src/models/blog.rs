@@ -8,5 +8,5 @@ pub struct BlogModel {
     pub text: String,
     pub avatar_path: Option<String>,
     pub image_path: Option<String>,
-    pub created_at: chrono::DateTime<chrono::Utc>,
+    pub created_at: i64,
 }

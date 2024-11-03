@@ -1,11 +1,17 @@
 use std::fs::File;
 use std::io::Write;
-use axum::extract::Multipart;
+use std::sync::Arc;
+use axum::debug_handler;
+use axum::extract::{Multipart, State};
 use axum::http::StatusCode;
 use uuid::Uuid;
 use bytes::Bytes;
+use crate::models::blog::BlogModel;
+use crate::repository;
+use crate::state::AppState;
 
-pub async fn create(mut multipart: Multipart) -> Result<StatusCode, StatusCode> {
+#[debug_handler]
+pub async fn create(State(state): State<Arc<AppState>>, mut multipart: Multipart) -> Result<StatusCode, (StatusCode, String)> {
     let mut username = String::new();
     let mut text = String::new();
     let mut image_path = String::new();
@@ -37,11 +43,16 @@ pub async fn create(mut multipart: Multipart) -> Result<StatusCode, StatusCode> 
         }
     }
 
-    if { username.is_empty() || text.is_empty() } {
-        Err(StatusCode::BAD_REQUEST)
-    } else {
-        Ok(StatusCode::CREATED)
-    }
+    let blog = BlogModel {
+        id: Uuid::new_v4().to_string(),
+        username,
+        text,
+        image_path: Option::from(image_path),
+        avatar_path: Option::from(avatar_path),
+        created_at,
+    };
+
+    repository::blog::create(state, blog).await
 }
 
 fn save_image(data: Bytes, file_path: &String) {
