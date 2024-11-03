@@ -43,6 +43,13 @@ pub async fn create(State(state): State<Arc<AppState>>, mut multipart: Multipart
         }
     }
 
+    if username.is_empty() || text.is_empty() {
+        return Err((
+            StatusCode::INTERNAL_SERVER_ERROR,
+            "Failed to insert blog post: username and text must me filled.".to_string(),
+        ));
+    }
+
     let blog = BlogModel {
         id: Uuid::new_v4().to_string(),
         username,

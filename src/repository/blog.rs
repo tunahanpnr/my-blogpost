@@ -7,8 +7,7 @@ use crate::state::AppState;
 pub async fn create(
     data: Arc<AppState>,
     blog: BlogModel,
-) -> Result<StatusCode, (StatusCode, String)>  {
-
+) -> Result<StatusCode, (StatusCode, String)> {
     let result = sqlx::query!(
         "INSERT INTO blog (id, username, text, avatar_path, image_path, created_at)
         VALUES (?, ?, ?, ?, ?, ?)",
