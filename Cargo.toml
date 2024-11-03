@@ -4,6 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-axum = "0.7.7"
-axum-macros = "0.4.2"
+axum = { version = "0.7.7", features = ["default", "multipart", "macros"] }
 tokio = { version = "1.0", features = ["full"] }
+futures-util = "0.3.31"
+uuid = { version = "1.11.0", features = ["v4"] }
+chrono = "0.4.38"
+tracing = "0.1.40"
+bytes = "1.8.0"
