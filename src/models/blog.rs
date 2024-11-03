@@ -1,3 +1,4 @@
+use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize, sqlx::FromRow)]
@@ -8,5 +9,5 @@ pub struct BlogModel {
     pub text: String,
     pub avatar_path: Option<String>,
     pub image_path: Option<String>,
-    pub created_at: i64,
+    pub created_at: NaiveDateTime,
 }

@@ -5,5 +5,5 @@ CREATE TABLE IF NOT EXISTS blog (
     text TEXT NOT NULL,
     image_path TEXT,
     avatar_path TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

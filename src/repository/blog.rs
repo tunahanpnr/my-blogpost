@@ -1,5 +1,4 @@
 use std::sync::Arc;
-use axum::extract::State;
 use axum::http::StatusCode;
 use crate::models::blog::BlogModel;
 use crate::state::AppState;
@@ -28,4 +27,15 @@ pub async fn create(
             format!("Failed to insert blog post: {}", err),
         )),
     }
+}
+
+pub async fn get_all(data: Arc<AppState>) -> Result<Vec<BlogModel>, sqlx::Error> {
+    let blogs = sqlx::query_as!(
+            BlogModel,
+            "SELECT id, username, text, avatar_path, image_path, created_at FROM blog"
+        )
+        .fetch_all(&data.db)
+        .await?;
+
+    Ok(blogs)
 }
