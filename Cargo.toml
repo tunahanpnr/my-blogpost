@@ -11,3 +11,6 @@ uuid = { version = "1.11.0", features = ["v4"] }
 chrono = "0.4.38"
 tracing = "0.1.40"
 bytes = "1.8.0"
+serde = { version = "1.0.214", features = ["derive"] }
+sqlx = { version = "0.8.2", features = ["macros", "runtime-tokio", "sqlite"] }
+
