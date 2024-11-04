@@ -31,7 +31,7 @@ export default function BlogPage() {
 
     return (
         <>
-            <BlogForm handleRefresh={handleRefresh}/>
+            <BlogForm handleRefresh={handleRefresh} />
             <Box
                 display="flex"
                 alignItems="center"

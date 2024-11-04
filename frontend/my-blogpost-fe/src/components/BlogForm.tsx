@@ -4,11 +4,11 @@ import {CreateBlogPost} from "../models/BlogModel.ts";
 
 
 interface BlogFormProps {
-    handleRefresh?: () => void
+    handleRefresh: () => void
 }
 
 
-const BlogForm: React.FC = ({handleRefresh}: BlogFormProps) => {
+const BlogForm: React.FC<BlogFormProps> = ({handleRefresh}) => {
     const [formData, setFormData] = useState<CreateBlogPost>({
         username: '',
         text: '',
@@ -104,12 +104,12 @@ const BlogForm: React.FC = ({handleRefresh}: BlogFormProps) => {
                             inputProps={{accept: 'image/*'}}
                             margin="normal"
                             fullWidth
-                            onChange={handleFileChange} // Update state on file selection
+                            onChange={handleFileChange}
                         />
                         {formData.image && (
                             <CardMedia
                                 component="img"
-                                image={URL.createObjectURL(formData.image)} // Display selected image
+                                image={URL.createObjectURL(formData.image)}
                                 alt="Selected"
                                 sx={{
                                     height: '100px',
