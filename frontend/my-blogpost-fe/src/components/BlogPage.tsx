@@ -10,43 +10,28 @@ import {
 } from '@mui/material';
 import {useEffect, useState} from "react";
 import BlogForm from "./BlogForm.tsx";
+import {BlogPost} from "../models/BlogModel.ts";
+import {useApi} from "../hooks/useApi.ts";
+import {GET_IMAGE_PREFIX, LIST_BLOG_POSTS} from "../api/api.ts";
 
 export default function BlogPage() {
-    const [cardData, setCardData] = useState([
-        {
-            username: 'Card 1',
-            text: 'This is the first card',
-            image: 'https://media.istockphoto.com/id/517188688/photo/mountain-landscape.jpg?s=612x612&w=0&k=20&c=A63koPKaCyIwQWOTFBRWXj_PwCrR4cEoOw2S9Q7yVl8=',
-            avatar: 'https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg?t=st=1730672920~exp=1730676520~hmac=d343a15a4a4de71883939feffccddb10019f4e74aa44c59a94e37424f79d921c&w=1380'
-        },
-        {
-            username: 'Card 2',
-            text: 'This is the second card',
-            image: 'https://media.istockphoto.com/id/517188688/photo/mountain-landscape.jpg?s=612x612&w=0&k=20&c=A63koPKaCyIwQWOTFBRWXj_PwCrR4cEoOw2S9Q7yVl8=',
-            avatar: 'https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg?t=st=1730672920~exp=1730676520~hmac=d343a15a4a4de71883939feffccddb10019f4e74aa44c59a94e37424f79d921c&w=1380'
-        },
-        {
-            username: 'Card 3',
-            text: 'This is the third card',
-            image: 'https://media.istockphoto.com/id/517188688/photo/mountain-landscape.jpg?s=612x612&w=0&k=20&c=A63koPKaCyIwQWOTFBRWXj_PwCrR4cEoOw2S9Q7yVl8=',
-            avatar: 'https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg?t=st=1730672920~exp=1730676520~hmac=d343a15a4a4de71883939feffccddb10019f4e74aa44c59a94e37424f79d921c&w=1380'
-        },
-        {
-            username: 'Card 4',
-            text: 'This is the fourth card',
-            image: 'https://media.istockphoto.com/id/517188688/photo/mountain-landscape.jpg?s=612x612&w=0&k=20&c=A63koPKaCyIwQWOTFBRWXj_PwCrR4cEoOw2S9Q7yVl8=',
-            avatar: 'https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg?t=st=1730672920~exp=1730676520~hmac=d343a15a4a4de71883939feffccddb10019f4e74aa44c59a94e37424f79d921c&w=1380'
-        }
-    ]);
-
+    const [refresh, setRefresh] = useState(false);
+    const booksResponse = useApi<BlogPost[]>(LIST_BLOG_POSTS, refresh);
+    const [blogPosts, setBlogPosts] = useState<BlogPost[]>(booksResponse.data || []);
 
     useEffect(() => {
+        if (booksResponse.data) {
+            setBlogPosts(booksResponse.data);
+        }
+    }, [booksResponse.data]);
 
-    }, []);
+    function handleRefresh(): void {
+        setRefresh(prevState => !prevState);
+    }
 
     return (
         <>
-            <BlogForm/>
+            <BlogForm handleRefresh={handleRefresh}/>
             <Box
                 display="flex"
                 alignItems="center"
@@ -63,9 +48,10 @@ export default function BlogPage() {
                     }}
                 >
                     <Box display="flex" flexDirection="column" gap={2}>
-                        {cardData.map((card, index) => (
+                        {blogPosts.map((card, index) => (
                             <Card key={index} variant="outlined"
-                                  sx={{display: 'flex', height: 'auto', alignItems: 'flex-start'}}>
+                                  sx={{ display: 'flex', height: 'auto', alignItems: 'flex-start' }}>
+
                                 {/* Left Side: Avatar, Username, and Image */}
                                 <Box
                                     sx={{
@@ -78,36 +64,53 @@ export default function BlogPage() {
                                     }}
                                 >
                                     <CardHeader
-                                        avatar={<Avatar src={card.avatar} alt={card.username}/>}
+                                        avatar={<Avatar src={card.avatar} alt={card.username} />}
                                         title={card.username}
-                                        sx={{padding: 0}}
+                                        sx={{ padding: 0 }}
                                     />
                                     <CardMedia
                                         component="img"
-                                        image={card.image}
-                                        alt={card.username}
+                                        image={GET_IMAGE_PREFIX + card.image}
                                         sx={{
                                             height: '100%',
                                             width: '100%',
                                             objectFit: 'cover',
                                             borderRadius: 2,
                                             marginTop: 1
-                                        }} // Changed to cover
+                                        }}
                                     />
                                 </Box>
 
+                                {/* Right Side: Text Content and Created At Date */}
                                 <Box
                                     sx={{
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         width: '60%',
-                                        padding: 2
+                                        padding: 2,
+                                        position: 'relative'  // Enable absolute positioning within this box
                                     }}
                                 >
-                                    <CardContent>
+                                    <CardContent sx={{ width: '100%' }}>
+                                        {/* Main Text Content */}
                                         <Typography variant="body2" color="text.secondary">
                                             {card.text}
+                                        </Typography>
+
+                                        {/* Created At Date */}
+                                        <Typography
+                                            variant="caption"
+                                            color="text.secondary"
+                                            sx={{
+                                                position: 'absolute',
+                                                bottom: 0,
+                                                right: 0,
+                                                padding: '4px',
+                                                fontSize: '0.75rem',
+                                            }}
+                                        >
+                                            {new Date(card.created_at).toLocaleString()}
                                         </Typography>
                                     </CardContent>
                                 </Box>

@@ -1,15 +1,15 @@
 import React, {useState} from 'react';
 import {Box, Paper, CardMedia, TextField, Button} from '@mui/material';
+import {CreateBlogPost} from "../models/BlogModel.ts";
 
-interface FormData {
-    username: string;
-    text: string;
-    image: File | null;
-    avatar: string;
+
+interface BlogFormProps {
+    handleRefresh?: () => void
 }
 
-const BlogForm: React.FC = () => {
-    const [formData, setFormData] = useState<FormData>({
+
+const BlogForm: React.FC = ({handleRefresh}: BlogFormProps) => {
+    const [formData, setFormData] = useState<CreateBlogPost>({
         username: '',
         text: '',
         image: null,
@@ -24,7 +24,6 @@ const BlogForm: React.FC = () => {
         }));
     };
 
-    // Handle file input change
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0] || null;
         setFormData((prevData) => ({
@@ -33,7 +32,6 @@ const BlogForm: React.FC = () => {
         }));
     };
 
-    // Handle form submission
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
@@ -55,8 +53,7 @@ const BlogForm: React.FC = () => {
                 throw new Error('Network response was not ok');
             }
 
-            const responseData = await response.json();
-            console.log('Success:', responseData);
+            handleRefresh()
             setFormData({username: '', text: '', image: null, avatar: ''});
 
         } catch (error) {
@@ -94,7 +91,7 @@ const BlogForm: React.FC = () => {
                     <Box sx={{width: '40%', paddingRight: 1}}>
                         <TextField
                             name="avatar"
-                            label="Avatar Image URL"
+                            label="Avatar URL"
                             value={formData.avatar}
                             onChange={handleChange}
                             variant="outlined"
@@ -149,7 +146,7 @@ const BlogForm: React.FC = () => {
                     </Box>
                 </Box>
                 <Button type="submit" variant="contained" color="primary">
-                    Add Card
+                    Add Post
                 </Button>
             </Paper>
         </Box>
