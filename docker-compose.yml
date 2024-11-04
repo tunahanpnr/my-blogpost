@@ -10,7 +10,17 @@ services:
     volumes:
       - ./db.sqlite:/app/db.sqlite
       - ./migrations:/app/migrations
-      - ./tmp:/app/tmp
+      - /etc/ssl/certs:/etc/ssl/certs
     ports:
       - "3000:3000"
 
+  my-blogpost-fe:
+    build:
+      context: ./frontend/my-blogpost-fe
+      dockerfile: Dockerfile
+    container_name: my-blogpost-fe
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - my-blogpost-be

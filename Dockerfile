@@ -20,8 +20,9 @@ COPY --from=builder /app/target/release/my-blogposts /app/my-blogposts
 
 COPY .env ./
 COPY migrations ./migrations
+RUN mkdir -p /app/tmp
 
-EXPOSE 8080
+EXPOSE 3000
 
 CMD ["sqlx", "migrate", "run"]
 
