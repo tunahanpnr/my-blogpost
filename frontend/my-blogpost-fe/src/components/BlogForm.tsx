@@ -132,6 +132,7 @@ const BlogForm: React.FC<BlogFormProps> = ({handleRefresh}) => {
                             variant="outlined"
                             fullWidth
                             margin="normal"
+                            required={true}
                         />
                         <TextField
                             name="text"
@@ -143,6 +144,7 @@ const BlogForm: React.FC<BlogFormProps> = ({handleRefresh}) => {
                             multiline
                             rows={4}
                             margin="normal"
+                            required={true}
                         />
                     </Box>
                 </Box>
