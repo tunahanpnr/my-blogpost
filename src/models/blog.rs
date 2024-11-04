@@ -7,7 +7,7 @@ pub struct BlogModel {
     pub id: String,
     pub username: String,
     pub text: String,
-    pub avatar_path: Option<String>,
-    pub image_path: Option<String>,
+    pub avatar: Option<String>,
+    pub image: Option<String>,
     pub created_at: NaiveDateTime,
 }

@@ -14,3 +14,5 @@ bytes = "1.8.0"
 serde = { version = "1.0.214", features = ["derive"] }
 sqlx = { version = "0.8.2", features = ["macros", "runtime-tokio", "sqlite", "chrono"] }
 tower-http = { version = "0.6.1", features = ["full"] }
+reqwest = { version = "0.12.9", features = ["blocking"]}
+anyhow = "1.0.92"

@@ -8,13 +8,13 @@ pub async fn create(
     blog: BlogModel,
 ) -> Result<StatusCode, (StatusCode, String)> {
     let result = sqlx::query!(
-        "INSERT INTO blog (id, username, text, avatar_path, image_path, created_at)
+        "INSERT INTO blog (id, username, text, avatar, image, created_at)
         VALUES (?, ?, ?, ?, ?, ?)",
         blog.id,
         blog.username,
         blog.text,
-        blog.avatar_path,
-        blog.image_path,
+        blog.avatar,
+        blog.image,
         blog.created_at
     )
         .execute(&data.db)
@@ -32,7 +32,7 @@ pub async fn create(
 pub async fn get_all(data: Arc<AppState>) -> Result<Vec<BlogModel>, sqlx::Error> {
     let blogs = sqlx::query_as!(
             BlogModel,
-            "SELECT id, username, text, avatar_path, image_path, created_at FROM blog"
+            "SELECT id, username, text, avatar, image, created_at FROM blog"
         )
         .fetch_all(&data.db)
         .await?;

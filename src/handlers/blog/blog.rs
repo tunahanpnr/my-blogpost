@@ -7,15 +7,15 @@ use axum::http::StatusCode;
 use uuid::Uuid;
 use bytes::Bytes;
 use crate::models::blog::BlogModel;
-use crate::repository;
+use crate::{repository, utils};
 use crate::state::AppState;
 
 #[debug_handler]
 pub async fn create(State(state): State<Arc<AppState>>, mut multipart: Multipart) -> Result<StatusCode, (StatusCode, String)> {
     let mut username = String::new();
     let mut text = String::new();
-    let image_path = String::new();
-    let mut avatar_path = String::new();
+    let mut image = String::new();
+    let mut avatar = String::new();
     let created_at = chrono::offset::Utc::now();
 
     while let Some(field) = multipart.next_field().await.unwrap() {
@@ -28,12 +28,20 @@ pub async fn create(State(state): State<Arc<AppState>>, mut multipart: Multipart
                 text = field.text().await.unwrap();
             }
             "avatar" => {
-                avatar_path = field.text().await.unwrap();
+                let url = field.text().await.unwrap();
+                avatar = format!("{}-{}.png", Uuid::new_v4(), created_at.timestamp());
+                let file_path = format!("./tmp/{}", avatar);
+                if utils::image_downloader::download_image(&url, &file_path).await.is_err() {
+                    return Err((
+                        StatusCode::INTERNAL_SERVER_ERROR,
+                        "Failed to downloading avatar image".to_string(),
+                    ));
+                }
             }
             "image" => {
                 let data = field.bytes().await.unwrap();
-                let image_path = format!("{}-{}.png", Uuid::new_v4(), created_at.timestamp());
-                let file_path = format!("./tmp/{}", image_path);
+                image = format!("{}-{}.png", Uuid::new_v4(), created_at.timestamp());
+                let file_path = format!("./tmp/{}", image);
                 save_image(data, &file_path);
             }
             _ => {}
@@ -51,8 +59,8 @@ pub async fn create(State(state): State<Arc<AppState>>, mut multipart: Multipart
         id: Uuid::new_v4().to_string(),
         username,
         text,
-        image_path: Option::from(image_path),
-        avatar_path: Option::from(avatar_path),
+        image: Option::from(image),
+        avatar: Option::from(avatar),
         created_at: created_at.naive_utc()
     };
 
