@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  my-blogpost-be:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - ./db.sqlite:/app/db.sqlite
+      - ./migrations:/app/migrations
+    ports:
+      - "3000:3000"
+
