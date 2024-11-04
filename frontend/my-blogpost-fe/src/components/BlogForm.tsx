@@ -41,8 +41,9 @@ const BlogForm: React.FC = ({handleRefresh}: BlogFormProps) => {
         if (formData.image) {
             dataToSend.append('image', formData.image);
         }
-        dataToSend.append('avatar', formData.avatar);
-
+        if (formData.avatar) {
+            dataToSend.append('avatar', formData.avatar);
+        }
         try {
             const response = await fetch('http://localhost:3000/v1/blog/create', {
                 method: 'POST',

@@ -64,7 +64,7 @@ export default function BlogPage() {
                                     }}
                                 >
                                     <CardHeader
-                                        avatar={<Avatar src={card.avatar} alt={card.username} />}
+                                        avatar={<Avatar src={GET_IMAGE_PREFIX + card.avatar} alt={card.username} />}
                                         title={card.username}
                                         sx={{ padding: 0 }}
                                     />
