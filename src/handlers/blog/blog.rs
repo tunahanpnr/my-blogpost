@@ -14,7 +14,7 @@ use crate::state::AppState;
 pub async fn create(State(state): State<Arc<AppState>>, mut multipart: Multipart) -> Result<StatusCode, (StatusCode, String)> {
     let mut username = String::new();
     let mut text = String::new();
-    let mut image_path = String::new();
+    let image_path = String::new();
     let mut avatar_path = String::new();
     let created_at = chrono::offset::Utc::now();
 
@@ -27,17 +27,14 @@ pub async fn create(State(state): State<Arc<AppState>>, mut multipart: Multipart
             "text" => {
                 text = field.text().await.unwrap();
             }
+            "avatar" => {
+                avatar_path = field.text().await.unwrap();
+            }
             "image" => {
                 let data = field.bytes().await.unwrap();
-                let file_path = format!("./tmp/{}-{}.png", Uuid::new_v4(), created_at.timestamp());
+                let image_path = format!("{}-{}.png", Uuid::new_v4(), created_at.timestamp());
+                let file_path = format!("./tmp/{}", image_path);
                 save_image(data, &file_path);
-                image_path = file_path;
-            }
-            "avatar" => {
-                let data = field.bytes().await.unwrap();
-                let file_path = format!("./tmp/{}-{}.png", Uuid::new_v4(), created_at.timestamp());
-                save_image(data, &file_path);
-                avatar_path = file_path;
             }
             _ => {}
         }
